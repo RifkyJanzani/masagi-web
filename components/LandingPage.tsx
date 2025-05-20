@@ -2,6 +2,7 @@
 'use client'
 import { useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
+import Link from 'next/link';
 
 export default function LandingPage() {
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function LandingPage() {
 
         {/* Produk dan Layanan */}
         <section id="produk" className="min-h-[50vh] px-4 py-16 text-center">
-          <h2 className="text-4xl font-bold text-[#1E2D24] mb-4">Produk dan Layanan</h2>
+          <h2 className="text-4xl font-bold text-green-900 mb-4">Produk dan Layanan</h2>
           <p className="max-w-2xl mx-auto text-[#3F3F3F] mb-10">
             Temukan produk dan mesin kelapa berkualitas terbaik...
           </p>
@@ -80,13 +81,17 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="flex-1 text-left">
-              <h3 className="text-3xl md:text-4xl font-bold text-[#23422A] mb-4">Desiccated Coconut</h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-green-900 mb-4">Desiccated Coconut</h3>
               <p className="text-gray-800 mb-8">
                 Desiccated coconut adalah kelapa parut yang dikeringkan dan bebas dari air serta minyak...
               </p>
               <div className="flex gap-4 flex-wrap">
-                <button className="bg-green-700 text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-green-800 transition">Detail Lebih…</button>
-                <button className="bg-white text-green-700 border border-green-700 px-6 py-2 rounded-full font-semibold shadow hover:bg-green-50 transition">Beli Sekarang</button>
+                <Link href="/desiccated">
+                  <button className="bg-green-700 text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-green-800 transition">Detail Lebih…</button>
+                </Link>
+                <Link href="/produk">
+                  <button className="bg-white text-green-700 border border-green-700 px-6 py-2 rounded-full font-semibold shadow hover:bg-green-50 transition">Beli Sekarang</button>
+                </Link>
               </div>
             </div>
           </div>
@@ -102,21 +107,25 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="flex-1 text-left">
-              <h3 className="text-3xl md:text-4xl font-bold text-[#23422A] mb-4">Manufaktur Mesin</h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-green-900 mb-4">Manufaktur Mesin</h3>
               <p className="text-gray-800 mb-8">
                 Perusahaan kami juga bergerak di bidang penyediaan solusi teknologi tepat guna...
               </p>
               <div className="flex gap-4 flex-wrap">
-                <button className="bg-green-700 text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-green-800 transition">Detail Lebih…</button>
-                <button className="bg-white text-green-700 border border-green-700 px-6 py-2 rounded-full font-semibold shadow hover:bg-green-50 transition">Beli Sekarang</button>
+                <Link href="/manufaktur">
+                  <button className="bg-green-700 text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-green-800 transition">Detail Lebih…</button>
+                </Link>
+                <Link href="/produk">
+                  <button className="bg-white text-green-700 border border-green-700 px-6 py-2 rounded-full font-semibold shadow hover:bg-green-50 transition">Beli Sekarang</button>
+                </Link>
               </div>
             </div>
           </div>
         </section>
 
         {/* Artikel Section */}
-        <section id="artikel" className="min-h-[50vh] px-4 py-16 text-center">
-          <h2 className="text-4xl font-bold text-[#1E2D24] mb-10">Artikel</h2>
+        {/* <section id="artikel" className="min-h-[50vh] px-4 py-16 text-center">
+          <h2 className="text-4xl font-bold text-green-900 mb-10">Artikel</h2>
           <div className="flex flex-wrap justify-center gap-8 mb-6">
             {[
               {
@@ -143,11 +152,11 @@ export default function LandingPage() {
             ))}
           </div>
           <a href="/artikel" className="mt-4 inline-block text-sm text-green-900 font-semibold hover:underline transition-colors">Lihat lebih banyak...</a>
-        </section>
+        </section> */}
 
         {/* Jurnal Section */}
-        <section id="jurnal" className="min-h-[50vh] px-4 py-16 text-center">
-          <h2 className="text-4xl font-bold text-[#1E2D24] mb-10">Jurnal</h2>
+        <section id="jurnal" className="w-full flex flex-col px-4 py-16 text-center bg-green-200">
+          <h2 className="text-4xl font-bold text-green-900 mb-10">Jurnal</h2>
           <div className="flex justify-center gap-4 flex-wrap">
             <div className="w-52 h-72 bg-gray-300 rounded-2xl"></div>
             <div className="w-52 h-72 bg-gray-300 rounded-2xl"></div>

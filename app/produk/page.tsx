@@ -95,7 +95,7 @@ export default function ProdukPage() {
             onClick={() => setActiveCategory(cat.value)}
             className={`px-4 py-1 rounded-full text-sm font-semibold transition-colors duration-200 ${
               activeCategory === cat.value
-                ? 'bg-green-500 text-white'
+                ? 'bg-green-900 text-white'
                 : 'text-gray-800 hover:bg-green-100'
             }`}
           >
@@ -117,16 +117,16 @@ export default function ProdukPage() {
               className="w-full h-48 object-cover rounded-xl mb-4"
             />
             <h3 className="font-semibold text-lg text-center text-gray-800">{product.name}</h3>
-            <p className="text-green-700 font-bold text-center mb-4">
+            <p className="text-green-900 font-bold text-center mb-4">
               Rp. {product.price.toLocaleString('id-ID')}
             </p>
             <div className="flex gap-2">
               <Link href={`/produk/${product.slug}`}>
-                <button className="bg-white border border-green-600 text-green-600 px-4 py-1 rounded-full text-sm hover:bg-green-50">
+                <button className="bg-white border border-green-900 text-green-900 px-4 py-1 rounded-full text-sm hover:bg-green-50">
                   Detail
                 </button>
               </Link>
-              <button className="bg-green-600 text-white px-4 py-1 rounded-full text-sm hover:bg-green-700">
+              <button className="bg-green-900 text-white px-4 py-1 rounded-full text-sm hover:bg-green-700">
                 Beli
               </button>
             </div>

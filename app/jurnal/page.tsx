@@ -24,11 +24,12 @@ const baseJournal: Journal = {
   ],
 };
 
+
 const journals: Journal[] = Array.from({ length: 4 }, (_, i) => ({ ...baseJournal }));
 
 export default function JurnalPage() {
   return (
-    <main className="flex flex-col items-center min-h-screen px-2 pt-8 md:pt-16 bg-[#e3f2e1]">
+    <main className="flex flex-col items-center min-h-screen px-2 pt-8 md:pt-32 bg-[#e3f2e1]">
       <Container>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <h1 className="text-5xl md:text-6xl font-bold text-green-900 mt-2 mb-0 md:mb-0">Jurnal</h1>
@@ -38,7 +39,7 @@ export default function JurnalPage() {
               placeholder="Cari.................."
               className="flex-1 bg-transparent outline-none text-lg px-2 min-w-0"
             />
-            <button className="bg-green-600 text-white rounded-xl px-8 py-2 font-semibold ml-2">Cari</button>
+            <button className="bg-green-900 text-white rounded-xl px-8 py-2 font-semibold ml-2 hover:bg-green-700">Cari</button>
           </div>
         </div>
         {/* Journal Cards */}
@@ -79,8 +80,8 @@ export default function JurnalPage() {
               </div>
               {/* Buttons */}
               <div className="flex flex-col md:flex-row gap-2 ml-2">
-                <button className="bg-green-600 text-white rounded-xl px-8 py-2 font-semibold">Detail</button>
-                <button className="border border-green-600 text-green-700 rounded-xl px-8 py-2 font-semibold bg-white">Kunjungi</button>
+                <button className="bg-green-900 text-white rounded-xl px-8 py-2 font-semibold hover:bg-green-700">Detail</button>
+                <button className="border border-green-900 text-green-900 rounded-xl px-8 py-2 font-semibold bg-white hover:bg-green-100">Kunjungi</button>
               </div>
             </div>
           ))}

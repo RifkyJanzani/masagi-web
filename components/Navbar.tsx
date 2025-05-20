@@ -108,7 +108,7 @@ const Navbar = () => {
               onClick={() => handleNavClick(item)}
               className={`text-base font-medium px-4 py-1 rounded-full transition-all duration-200 ${
                 getIsActive(item)
-                  ? "bg-green-600 text-white font-semibold"
+                  ? "bg-green-900 text-white font-semibold"
                   : "text-black hover:bg-gray-100"
               }`}
             >
@@ -119,7 +119,7 @@ const Navbar = () => {
         {/* Kontak Desktop */}
         <button
           onClick={() => handleNavClick("Kontak")}
-          className="hidden md:block text-green-700 font-bold text-lg ml-6 hover:text-green-900"
+          className="hidden md:block text-green-900 font-bold text-lg ml-6 hover:text-green-900"
         >
           Kontak
         </button>
@@ -132,7 +132,7 @@ const Navbar = () => {
                 onClick={() => handleNavClick(item)}
                 className={`w-11/12 text-base font-medium px-4 py-2 rounded-full transition-all duration-200 text-center ${
                   getIsActive(item)
-                    ? "bg-green-600 text-white font-semibold"
+                    ? "bg-green-900 text-white font-semibold"
                     : "text-black hover:bg-gray-100"
                 }`}
               >
@@ -141,7 +141,7 @@ const Navbar = () => {
             ))}
             <button
               onClick={() => handleNavClick("Kontak")}
-              className="w-11/12 text-green-700 font-bold text-lg mt-2 py-2 rounded-full hover:text-green-900"
+              className="w-11/12 text-green-900 font-bold text-lg mt-2 py-2 rounded-full hover:text-green-900"
             >
               Kontak
             </button>
