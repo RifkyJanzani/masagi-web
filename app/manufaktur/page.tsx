@@ -1,10 +1,8 @@
-'use client';
-
 import React from 'react';
 import Container from '@/components/Container';
 import Reveal from '@/components/Reveal';
 
-export default function ProdukPage() {
+export default function ManufakturPage() {
   return (
     <main className="relative flex flex-col items-center min-h-screen bg-[#c3e2c1] overflow-hidden">
       {/* Background Gambar Parallax */}

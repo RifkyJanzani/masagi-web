@@ -43,7 +43,7 @@ export default function LandingPage() {
           <p className="max-w-2xl mx-auto text-[#3F3F3F] mb-10">
             Temukan produk dan mesin kelapa berkualitas terbaik...
           </p>
-          <div className="flex flex-wrap justify-center gap-8 mb-6">
+          <div className="flex flex-wrap justify-center gap-8">
             {[
               {
                 name: 'Desiccated Coconut A',
@@ -72,7 +72,7 @@ export default function LandingPage() {
         </section>
 
         {/* Desiccated Coconut Section */}
-        <section className="w-full flex flex-col gap-16 py-16 px-2 bg-green-200">
+        <section className="w-full py-16">
           <div className="flex flex-col md:flex-row items-center justify-between max-w-5xl mx-auto p-0 md:p-4 gap-8 bg-transparent">
             <div className="flex-1 flex justify-center items-center">
               <div className="relative w-64 h-64 md:w-72 md:h-72 flex items-end">
@@ -98,7 +98,7 @@ export default function LandingPage() {
         </section>
 
         {/* Manufaktur Mesin */}
-        <section className="w-full flex flex-col gap-16 py-16 px-2">
+        <section className="w-full py-16">
           <div className="flex flex-col md:flex-row-reverse items-center justify-between max-w-5xl mx-auto p-0 md:p-4 gap-8 bg-transparent">
             <div className="flex-1 flex justify-center items-center">
               <div className="relative w-64 h-64 md:w-72 md:h-72 flex items-end">
@@ -124,7 +124,7 @@ export default function LandingPage() {
         </section>
 
         {/* Artikel Section */}
-        {/* <section id="artikel" className="min-h-[50vh] px-4 py-16 text-center">
+        <section className="w-full py-16">
           <h2 className="text-4xl font-bold text-green-900 mb-10">Artikel</h2>
           <div className="flex flex-wrap justify-center gap-8 mb-6">
             {[
@@ -152,10 +152,10 @@ export default function LandingPage() {
             ))}
           </div>
           <a href="/artikel" className="mt-4 inline-block text-sm text-green-900 font-semibold hover:underline transition-colors">Lihat lebih banyak...</a>
-        </section> */}
+        </section>
 
         {/* Jurnal Section */}
-        <section id="jurnal" className="w-full flex flex-col px-4 py-16 text-center bg-green-200">
+        <section className="w-full py-16">
           <h2 className="text-4xl font-bold text-green-900 mb-10">Jurnal</h2>
           <div className="flex justify-center gap-4 flex-wrap">
             <div className="w-52 h-72 bg-gray-300 rounded-2xl"></div>

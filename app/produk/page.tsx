@@ -1,5 +1,4 @@
-'use client'
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Container from '@/components/Container';
 import { supabase } from '@/lib/supabase';
@@ -10,31 +9,34 @@ const categories = [
   { label: 'Mesin', value: 'mesin' },
 ];
 
-export default function ProdukPage() {
-  const [products, setProducts] = useState<any[]>([]);
-  const [activeCategory, setActiveCategory] = useState('all');
+async function getProducts(category?: string) {
+  let query = supabase.from('products').select('*');
+  
+  if (category && category !== 'all') {
+    query = query.eq('category', category);
+  }
 
-  const fetchProducts = async () => {
-    let { data, error } = await supabase
-      .from('products')
-      .select('*');
+  const { data, error } = await query;
 
-    if (error) console.error('Gagal ambil data:', error);
-    else setProducts(data || []);
-  };
+  if (error) {
+    console.error('Gagal ambil data:', error);
+    return [];
+  }
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  return data || [];
+}
 
-  const filteredProducts = activeCategory === 'all'
-    ? products
-    : products.filter((p) => p.category === activeCategory);
+export default async function ProdukPage({
+  searchParams,
+}: {
+  searchParams: { category?: string };
+}) {
+  const products = await getProducts(searchParams.category);
+  const activeCategory = searchParams.category || 'all';
 
   return (
     <main className="flex flex-col items-center min-h-screen px-4 pt-24 md:pt-32 bg-[#e3f2e1]">
       <div className="absolute top-0 left-0 w-full h-[60vh] bg-[url('/img/bg.jpg')] bg-cover bg-center z-0" />
-
       <div className="absolute top-0 left-0 w-full h-[60vh] bg-gradient-to-b from-black/50 to-[#e3f2e1] z-10" />
 
       <div className="relative z-20 flex flex-col items-center w-full px-4">
@@ -42,9 +44,9 @@ export default function ProdukPage() {
 
         <div className="flex gap-3 mb-10 flex-wrap justify-center bg-white rounded-3xl shadow px-4 py-2">
           {categories.map((cat) => (
-            <button
+            <Link
               key={cat.value}
-              onClick={() => setActiveCategory(cat.value)}
+              href={`/produk?category=${cat.value}`}
               className={`px-4 py-1 rounded-full text-sm font-semibold transition-colors duration-200 ${
                 activeCategory === cat.value
                   ? 'bg-green-900 text-white'
@@ -52,13 +54,13 @@ export default function ProdukPage() {
               }`}
             >
               {cat.label}
-            </button>
+            </Link>
           ))}
         </div>
 
         <Container>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-6xl">
-            {filteredProducts.map((product, i) => (
+            {products.map((product, i) => (
               <div
                 key={product.id || i}
                 className="bg-white border rounded-2xl shadow-md p-4 flex flex-col items-center justify-between"
