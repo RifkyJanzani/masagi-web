@@ -47,7 +47,7 @@ export default async function ProductDetailPage({
   }
 
   return (
-    <main className="min-h-screen px-4 pt-8 md:pt-32 bg-[#e3f2e1] pb-12">
+    <main className="min-h-screen px-2 pt-24 bg-[#e3f2e1] pb-12">
       <Container>
         <div className="flex flex-col md:flex-row items-start gap-10">
           {/* Left: Image */}
@@ -79,7 +79,7 @@ export default async function ProductDetailPage({
               </div>
             </div>
 
-            <p className="text-gray-700 mb-2">{product.desc}</p>
+            <p className="text-gray-700 mb-2">{product.description}</p>
 
             <div className="mt-6">
               <a

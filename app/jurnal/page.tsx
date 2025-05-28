@@ -29,7 +29,7 @@ const journals: Journal[] = Array.from({ length: 4 }, (_, i) => ({ ...baseJourna
 
 export default function JurnalPage() {
   return (
-    <main className="flex flex-col items-center min-h-screen px-2 pt-8 md:pt-32 bg-[#c3e2c1] overflow-hidden">
+    <main className="flex flex-col items-center min-h-screen px-2 pt-24 bg-[#c3e2c1] overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[60vh] bg-[url('/img/bg.jpg')] bg-cover bg-center z-0" />
 
       {/* Overlay Gradient */}
