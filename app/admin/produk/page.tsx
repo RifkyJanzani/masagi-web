@@ -25,6 +25,7 @@ export default function ProdukPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [sortBy, setSortBy] = useState<SortOption>('newest')
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     fetchProducts()
@@ -89,6 +90,34 @@ export default function ProdukPage() {
           return 0
       }
     })
+
+  const handleDelete = async (productId: number) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId)
+
+      if (error) throw error
+      
+      // Refresh products list
+      await fetchProducts()
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      alert('Gagal menghapus produk')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const handleEdit = (productId: number) => {
+    router.push(`/admin/produk/edit/${productId}`)
+  }
 
   if (loading) {
     return (
@@ -210,14 +239,16 @@ export default function ProdukPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
-                      onClick={() => {/* TODO: Implement edit */}}
+                      onClick={() => handleEdit(product.id)}
                       className="text-green-600 hover:text-green-900 mr-4"
+                      disabled={isDeleting}
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => {/* TODO: Implement delete */}}
+                      onClick={() => handleDelete(product.id)}
                       className="text-red-600 hover:text-red-900"
+                      disabled={isDeleting}
                     >
                       Hapus
                     </button>
