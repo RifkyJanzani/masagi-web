@@ -4,6 +4,7 @@ import { useEffect, useState, use } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Modal from '@/components/Modal'
 
 interface Product {
   id: number
@@ -21,6 +22,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [product, setProduct] = useState<Product | null>(null)
+  const [showModal, setShowModal] = useState(false)
+  const [modalConfig, setModalConfig] = useState({
+    title: '',
+    message: '',
+    type: 'info' as 'success' | 'error' | 'warning' | 'info'
+  })
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -37,6 +44,11 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   useEffect(() => {
     fetchProduct()
   }, [])
+
+  const showMessage = (title: string, message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info') => {
+    setModalConfig({ title, message, type })
+    setShowModal(true)
+  }
 
   const fetchProduct = async () => {
     try {
@@ -62,7 +74,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       }
     } catch (error) {
       console.error('Error fetching product:', error)
-      alert('Gagal mengambil data produk')
+      showMessage('Error', 'Gagal mengambil data produk', 'error')
     } finally {
       setLoading(false)
     }
@@ -108,7 +120,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       setImagePreview(publicUrl)
     } catch (error) {
       console.error('Error uploading image:', error)
-      alert('Gagal mengupload gambar')
+      showMessage('Error', 'Gagal mengupload gambar', 'error')
     } finally {
       setUploading(false)
     }
@@ -133,11 +145,15 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
       if (error) throw error
 
-      alert('Produk berhasil diperbarui')
-      router.push('/admin/produk')
+      showMessage('Berhasil', 'Produk berhasil diperbarui', 'success')
+      
+      // Redirect after a short delay
+      setTimeout(() => {
+        router.push('/admin/produk')
+      }, 1500)
     } catch (error) {
       console.error('Error updating product:', error)
-      alert('Gagal memperbarui produk')
+      showMessage('Error', 'Gagal memperbarui produk', 'error')
     } finally {
       setSaving(false)
     }
@@ -152,137 +168,148 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="bg-white shadow rounded-lg p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Edit Produk</h1>
+    <>
+      <div className="bg-white shadow rounded-lg p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Edit Produk</h1>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              Nama Produk
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+              Harga
+            </label>
+            <input
+              type="number"
+              id="price"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+              Kategori
+            </label>
+            <select
+              id="category"
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              required
+            >
+              <option value="">Pilih Kategori</option>
+              <option value="desiccated">Desiccated Coconut</option>
+              <option value="mesin">Mesin</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+              Stok
+            </label>
+            <input
+              type="number"
+              id="stock"
+              value={formData.stock}
+              onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="unit" className="block text-sm font-medium text-gray-700">
+              Satuan
+            </label>
+            <input
+              type="text"
+              id="unit"
+              value={formData.unit}
+              onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+              Gambar Produk
+            </label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="mt-1 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-lg file:border-0
+                file:text-sm file:font-semibold
+                file:bg-green-50 file:text-green-700
+                hover:file:bg-green-100"
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Format yang didukung: JPG, PNG, GIF. Maksimal 2MB
+            </p>
+          </div>
+
+          {imagePreview && (
+            <div className="mt-2">
+              <p className="text-sm font-medium text-gray-700 mb-2">Preview Gambar:</p>
+              <div className="relative h-48 w-48">
+                <Image
+                  src={imagePreview}
+                  alt="Product preview"
+                  fill
+                  className="object-cover rounded-lg"
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => router.push('/admin/produk')}
+              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              disabled={saving || uploading}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
+            >
+              {saving ? 'Menyimpan...' : 'Simpan Perubahan'}
+            </button>
+          </div>
+        </form>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Nama Produk
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-            Harga
-          </label>
-          <input
-            type="number"
-            id="price"
-            value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-            Kategori
-          </label>
-          <select
-            id="category"
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          >
-            <option value="">Pilih Kategori</option>
-            <option value="desiccated">Desiccated Coconut</option>
-            <option value="mesin">Mesin</option>
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
-            Stok
-          </label>
-          <input
-            type="number"
-            id="stock"
-            value={formData.stock}
-            onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="unit" className="block text-sm font-medium text-gray-700">
-            Satuan
-          </label>
-          <input
-            type="text"
-            id="unit"
-            value={formData.unit}
-            onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-            Gambar Produk
-          </label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="mt-1 block w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-lg file:border-0
-              file:text-sm file:font-semibold
-              file:bg-green-50 file:text-green-700
-              hover:file:bg-green-100"
-          />
-          <p className="mt-1 text-sm text-gray-500">
-            Format yang didukung: JPG, PNG, GIF. Maksimal 2MB
-          </p>
-        </div>
-
-        {imagePreview && (
-          <div className="mt-2">
-            <p className="text-sm font-medium text-gray-700 mb-2">Preview Gambar:</p>
-            <div className="relative h-48 w-48">
-              <Image
-                src={imagePreview}
-                alt="Product preview"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="flex justify-end space-x-4">
-          <button
-            type="button"
-            onClick={() => router.push('/admin/produk')}
-            className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            Batal
-          </button>
-          <button
-            type="submit"
-            disabled={saving || uploading}
-            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
-          >
-            {saving ? 'Menyimpan...' : 'Simpan Perubahan'}
-          </button>
-        </div>
-      </form>
-    </div>
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title={modalConfig.title}
+        type={modalConfig.type}
+      >
+        {modalConfig.message}
+      </Modal>
+    </>
   )
 } 

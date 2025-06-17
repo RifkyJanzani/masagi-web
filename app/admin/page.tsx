@@ -1,8 +1,47 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminPage() {
+
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.replace('/login'); // redirect kalau belum login
+      } else {
+        setLoading(false); // sudah login
+
+        const userId = session.user.id;
+        console.log('User ID:', userId);
+
+        // Ambil role user dari tabel 'profiles'
+        const { data: profile, error } = await supabase
+          .from('users') // sesuaikan jika nama tabel berbeda
+          .select('role')
+          .eq('id', userId)
+          .single();
+
+        if (error) {
+          console.error('Gagal mengambil data role:', error);
+        } else {
+          console.log('User role:', profile.role); // ✅ Ini yang kamu butuhkan
+        }
+
+      }
+    };
+    checkSession();
+  }, [router]);
+
+  if (loading) return <p className="p-10">Loading...</p>;
+
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>

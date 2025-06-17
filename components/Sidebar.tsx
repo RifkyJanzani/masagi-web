@@ -2,11 +2,16 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
+import ConfirmModal from '@/components/ConfirmModal'
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const menuItems = [
     {
@@ -26,13 +31,34 @@ export default function Sidebar() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
       ),
-    }
+    },
   ]
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+      
+      // Clear any admin flags
+      localStorage.removeItem('adminLoggedIn')
+      
+      // Redirect to login page
+      router.push('/login')
+    } catch (error) {
+      console.error('Error logging out:', error)
+      // Even if there's an error, redirect to login
+      router.push('/login')
+    } finally {
+      setIsLoggingOut(false)
+      setShowLogoutModal(false)
+    }
+  }
 
   return (
     <>
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out flex flex-col`}>
         <div className="flex items-center justify-between h-16 px-4 border-b">
           <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
           <button
@@ -44,7 +70,9 @@ export default function Sidebar() {
             </svg>
           </button>
         </div>
-        <nav className="px-4 py-4">
+        
+        {/* Navigation Menu */}
+        <nav className="px-4 py-4 flex-1">
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.path}>
@@ -61,6 +89,20 @@ export default function Sidebar() {
             ))}
           </ul>
         </nav>
+
+        {/* Logout Button - Fixed at bottom */}
+        <div className="p-4 border-t">
+          <button
+            onClick={() => setShowLogoutModal(true)}
+            disabled={isLoggingOut}
+            className="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-700 transition-colors"
+          >
+            <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            {isLoggingOut ? 'Logging out...' : 'Logout'}
+          </button>
+        </div>
       </div>
 
       {/* Mobile sidebar toggle */}
@@ -77,6 +119,18 @@ export default function Sidebar() {
 
       {/* Sidebar spacer */}
       <div className={`${isSidebarOpen ? 'lg:ml-64' : ''} transition-all duration-300 ease-in-out`} />
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Konfirmasi Logout"
+        message="Apakah Anda yakin ingin keluar dari admin panel?"
+        confirmText="Logout"
+        cancelText="Batal"
+        type="warning"
+      />
     </>
   )
 } 

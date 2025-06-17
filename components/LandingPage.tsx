@@ -47,17 +47,17 @@ export default function LandingPage() {
             {[
               {
                 name: 'Desiccated Coconut A',
-                image: 'https://via.placeholder.com/150',
+                image: '/img/dessicated.jpeg',
                 desc: 'Kelapa parut kering kualitas premium.'
               },
               {
                 name: 'Mesin Parut Kelapa',
-                image: 'https://via.placeholder.com/150',
+                image: 'img/mesin.jpg',
                 desc: 'Mesin efisien untuk memarut kelapa.'
               },
               {
                 name: 'Mesin Pengering',
-                image: 'https://via.placeholder.com/150',
+                image: 'img/mesin.jpg',
                 desc: 'Pengering kelapa otomatis.'
               }
             ].map((product, i) => (
@@ -72,7 +72,7 @@ export default function LandingPage() {
         </section>
 
         {/* Desiccated Coconut Section */}
-        <section className="w-full py-16">
+        <section className="w-full py-16 bg-green-200">
           <div className="flex flex-col md:flex-row items-center justify-between max-w-5xl mx-auto p-0 md:p-4 gap-8 bg-transparent">
             <div className="flex-1 flex justify-center items-center">
               <div className="relative w-64 h-64 md:w-72 md:h-72 flex items-end">
@@ -124,7 +124,7 @@ export default function LandingPage() {
         </section>
 
         {/* Artikel Section */}
-        <section className="w-full py-16">
+        {/* <section className="w-full py-16">
           <h2 className="text-4xl font-bold text-green-900 mb-10">Artikel</h2>
           <div className="flex flex-wrap justify-center gap-8 mb-6">
             {[
@@ -152,10 +152,10 @@ export default function LandingPage() {
             ))}
           </div>
           <a href="/artikel" className="mt-4 inline-block text-sm text-green-900 font-semibold hover:underline transition-colors">Lihat lebih banyak...</a>
-        </section>
+        </section> */}
 
         {/* Jurnal Section */}
-        <section className="w-full py-16">
+        <section className="w-full py-16 bg-green-200">
           <h2 className="text-4xl font-bold text-green-900 mb-10">Jurnal</h2>
           <div className="flex justify-center gap-4 flex-wrap">
             <div className="w-52 h-72 bg-gray-300 rounded-2xl"></div>
