@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { getCompanyProfile, CompanyProfile } from '@/lib/companyProfile';
 
 interface Journal {
   id: number;
@@ -18,6 +19,7 @@ interface Journal {
 
 export default function LandingPage() {
   const [journals, setJournals] = useState<Journal[]>([]);
+  const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,10 +41,27 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    fetchJournals();
+    fetchData();
   }, []);
 
-  const fetchJournals = async () => {
+  const fetchData = async () => {
+    try {
+      // Fetch both journals and company profile
+      const [journalsData, profileData] = await Promise.all([
+        fetchJournals(),
+        getCompanyProfile()
+      ]);
+
+      setJournals(journalsData);
+      setCompanyProfile(profileData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchJournals = async (): Promise<Journal[]> => {
     try {
       const { data, error } = await supabase
         .from('journals')
@@ -51,11 +70,10 @@ export default function LandingPage() {
         .limit(3); // Ambil 3 jurnal terbaru
 
       if (error) throw error;
-      setJournals(data || []);
+      return data || [];
     } catch (error) {
       console.error('Error fetching journals:', error);
-    } finally {
-      setLoading(false);
+      return [];
     }
   };
 
@@ -77,7 +95,7 @@ export default function LandingPage() {
           <div className="bg-white rounded-[2rem] shadow-2xl p-8 md:p-12 max-w-2xl w-full text-center">
             <h2 className="text-green-900 text-4xl md:text-5xl font-bold mb-4">Tentang Kami</h2>
             <p className="text-gray-700 text-base md:text-lg">
-              Masagi Energi Hijau adalah perusahaan yang bergerak di bidang agroindustri berkelanjutan...
+              {companyProfile?.about_us}
             </p>
           </div>
         </section>
