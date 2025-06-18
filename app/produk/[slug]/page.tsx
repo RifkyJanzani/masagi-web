@@ -83,7 +83,7 @@ export default async function ProductDetailPage({
 
             <div className="mt-6">
               <a
-                href="https://wa.me/6281234567890"
+                href="https://wa.me/6281219377033"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-green-900 text-white px-6 py-2 rounded-full text-center hover:bg-green-700 block w-full text-sm font-semibold"
