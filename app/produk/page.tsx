@@ -29,10 +29,11 @@ async function getProducts(category?: string) {
 export default async function ProdukPage({
   searchParams,
 }: {
-  searchParams: { category?: string };
+  searchParams: Promise<{ category?: string }>;
 }) {
-  const products = await getProducts(searchParams.category);
-  const activeCategory = searchParams.category || 'all';
+  const params = await searchParams;
+  const products = await getProducts(params.category);
+  const activeCategory = params.category || 'all';
 
   return (
     <main className="flex flex-col items-center min-h-screen px-4 pt-24 md:pt-32 bg-[#e3f2e1]">

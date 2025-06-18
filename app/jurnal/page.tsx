@@ -1,33 +1,37 @@
 import React from 'react';
 import Container from '@/components/Container';
+import { supabase } from '@/lib/supabase';
 
 // Tipe data jurnal
 interface Journal {
+  id: number;
   cover: string;
   title: string;
   university: string;
-  pIssn: string;
-  eIssn: string;
+  p_issn: string;
+  e_issn: string;
   badges: { label: string; color: string }[];
+  created_at: string;
 }
 
-const baseJournal: Journal = {
-  cover: '/cover-jurnal.png', // Ganti dengan path gambar yang sesuai
-  title: 'JURNAL TEKNOLOGI DAN MANAJEMEEN INDUSTRI TERAPAN',
-  university: 'Universitas Pancasila Jakarta',
-  pIssn: '1234-5678',
-  eIssn: '1234-5678',
-  badges: [
-    { label: 'S1 Accredited', color: 'bg-yellow-200 text-yellow-800' },
-    { label: 'Scopus Indexed', color: 'bg-orange-200 text-orange-800' },
-    { label: 'Garuda Indexed', color: 'bg-red-200 text-red-800' },
-  ],
-};
+// Fungsi untuk mengambil data jurnal dari Supabase
+async function getJournals() {
+  const { data, error } = await supabase
+    .from('journals')
+    .select('*')
+    .order('created_at', { ascending: false });
 
+  if (error) {
+    console.error('Gagal ambil data jurnal:', error);
+    return [];
+  }
 
-const journals: Journal[] = Array.from({ length: 4 }, (_, i) => ({ ...baseJournal }));
+  return data || [];
+}
 
-export default function JurnalPage() {
+export default async function JurnalPage() {
+  const journals = await getJournals();
+
   return (
     <main className="flex flex-col items-center min-h-screen px-2 pt-24 bg-[#c3e2c1] overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[60vh] bg-[url('/img/bg.jpg')] bg-cover bg-center z-0" />
@@ -49,47 +53,53 @@ export default function JurnalPage() {
           </div>
           {/* Journal Cards */}
           <div className="flex flex-col gap-8">
-            {journals.map((journal, i) => (
-              <div
-                key={i}
-                className="flex flex-row items-center bg-[#f6f6f6] rounded-2xl shadow px-4 py-4 gap-4"
-              >
-                {/* Cover */}
-                <div className="flex-shrink-0">
-                  <div className="bg-gray-200 rounded-xl w-28 h-36 flex items-center justify-center overflow-hidden">
-                    {/* Gambar placeholder */}
-                    <img src={journal.cover} alt="cover" className="object-cover w-full h-full" />
+            {journals.length > 0 ? (
+              journals.map((journal) => (
+                <div
+                  key={journal.id}
+                  className="flex flex-row items-center bg-[#f6f6f6] rounded-2xl shadow px-4 py-4 gap-4"
+                >
+                  {/* Cover */}
+                  <div className="flex-shrink-0">
+                    <div className="bg-gray-200 rounded-xl w-28 h-36 flex items-center justify-center overflow-hidden">
+                      {/* Gambar placeholder */}
+                      <img src={journal.cover || '/cover-jurnal.png'} alt="cover" className="object-cover w-full h-full" />
+                    </div>
+                  </div>
+                  {/* Info */}
+                  <div className="flex-1 flex flex-col gap-1">
+                    <div className="font-bold text-lg md:text-xl text-black leading-tight">
+                      {journal.title}
+                    </div>
+                    <div className="text-blue-700 text-base font-medium">
+                      {journal.university}
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      P-ISSN: {journal.p_issn} | E-ISSN: {journal.e_issn}
+                    </div>
+                    <div className="flex flex-row gap-2 mt-1">
+                      {journal.badges && journal.badges.map((badge: { label: string; color: string }, idx: number) => (
+                        <span
+                          key={idx}
+                          className={`px-2 py-0.5 rounded text-xs font-semibold ${badge.color}`}
+                        >
+                          {badge.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Buttons */}
+                  <div className="flex flex-col md:flex-row gap-2 ml-2">
+                    <button className="bg-green-900 text-white rounded-xl px-8 py-2 font-semibold hover:bg-green-700">Detail</button>
+                    <button className="border border-green-900 text-green-900 rounded-xl px-8 py-2 font-semibold bg-white hover:bg-green-100">Kunjungi</button>
                   </div>
                 </div>
-                {/* Info */}
-                <div className="flex-1 flex flex-col gap-1">
-                  <div className="font-bold text-lg md:text-xl text-black leading-tight">
-                    {journal.title}
-                  </div>
-                  <div className="text-blue-700 text-base font-medium">
-                    {journal.university}
-                  </div>
-                  <div className="text-gray-500 text-xs">
-                    P-ISSN: {journal.pIssn} | E-ISSN: {journal.eIssn}
-                  </div>
-                  <div className="flex flex-row gap-2 mt-1">
-                    {journal.badges.map((badge, idx) => (
-                      <span
-                        key={idx}
-                        className={`px-2 py-0.5 rounded text-xs font-semibold ${badge.color}`}
-                      >
-                        {badge.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                {/* Buttons */}
-                <div className="flex flex-col md:flex-row gap-2 ml-2">
-                  <button className="bg-green-900 text-white rounded-xl px-8 py-2 font-semibold hover:bg-green-700">Detail</button>
-                  <button className="border border-green-900 text-green-900 rounded-xl px-8 py-2 font-semibold bg-white hover:bg-green-100">Kunjungi</button>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500 text-lg">Belum ada jurnal yang tersedia</p>
               </div>
-            ))}
+            )}
           </div>
         </Container>
       </div>
