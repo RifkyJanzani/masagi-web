@@ -1,10 +1,25 @@
 // components/LandingPage.tsx
 'use client'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+
+interface Journal {
+  id: number;
+  title: string;
+  university: string;
+  p_issn: string;
+  e_issn: string;
+  cover: string;
+  badges: { label: string; color: string }[];
+  created_at: string;
+}
 
 export default function LandingPage() {
+  const [journals, setJournals] = useState<Journal[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash) {
       const sectionId = window.location.hash.replace('#', '');
@@ -22,6 +37,36 @@ export default function LandingPage() {
       }, 100);
     }
   }, []);
+
+  useEffect(() => {
+    fetchJournals();
+  }, []);
+
+  const fetchJournals = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('journals')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(3); // Ambil 3 jurnal terbaru
+
+      if (error) throw error;
+      setJournals(data || []);
+    } catch (error) {
+      console.error('Error fetching journals:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isValidImageUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   return (
     <>
@@ -123,46 +168,55 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Artikel Section */}
-        {/* <section className="w-full py-16">
-          <h2 className="text-4xl font-bold text-green-900 mb-10">Artikel</h2>
-          <div className="flex flex-wrap justify-center gap-8 mb-6">
-            {[
-              {
-                name: 'Manfaat Desiccated Coconut untuk Industri Makanan',
-                image: 'https://via.placeholder.com/150',
-                desc: 'Kelapa parut kering kualitas premium.'
-              },
-              {
-                name: 'Tips Memilih Mesin Parut Kelapa',
-                image: 'https://via.placeholder.com/150',
-                desc: 'Mesin efisien untuk memarut kelapa.'
-              },
-              {
-                name: 'Peluang Ekspor Produk Kelapa',
-                image: 'https://via.placeholder.com/150',
-                desc: 'Pengering kelapa otomatis.'
-              }
-            ].map((product, i) => (
-              <div key={i} className="bg-gray-100 rounded-2xl w-64 h-72 flex flex-col items-center justify-between p-4 shadow hover:shadow-md transition">
-                <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded-xl mb-4" />
-                <h3 className="font-bold text-lg text-green-900 mb-2">{product.name}</h3>
-                <p className="text-gray-700 text-sm text-center">{product.desc}</p>
-              </div>
-            ))}
-          </div>
-          <a href="/artikel" className="mt-4 inline-block text-sm text-green-900 font-semibold hover:underline transition-colors">Lihat lebih banyak...</a>
-        </section> */}
-
         {/* Jurnal Section */}
         <section className="w-full py-16 bg-green-200">
           <h2 className="text-4xl font-bold text-green-900 mb-10">Jurnal</h2>
-          <div className="flex justify-center gap-4 flex-wrap">
-            <div className="w-52 h-72 bg-gray-300 rounded-2xl"></div>
-            <div className="w-52 h-72 bg-gray-300 rounded-2xl"></div>
-            <div className="w-52 h-72 bg-gray-300 rounded-2xl"></div>
-          </div>
-          <a href="/jurnal" className="mt-4 inline-block text-sm text-green-900 font-semibold hover:underline transition-colors">Lihat lebih banyak...</a>
+          {loading ? (
+            <div className="flex justify-center gap-4 flex-wrap">
+              <div className="w-52 h-72 bg-gray-300 rounded-2xl animate-pulse"></div>
+              <div className="w-52 h-72 bg-gray-300 rounded-2xl animate-pulse"></div>
+              <div className="w-52 h-72 bg-gray-300 rounded-2xl animate-pulse"></div>
+            </div>
+          ) : journals.length > 0 ? (
+            <div className="flex justify-center gap-4 flex-wrap">
+              {journals.map((journal) => (
+                <div key={journal.id} className="w-52 h-72 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
+                  <div className="h-48 w-full relative">
+                    {isValidImageUrl(journal.cover) ? (
+                      <img 
+                        src={journal.cover} 
+                        alt={journal.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <h3 className="font-semibold text-sm text-green-900 mb-1 line-clamp-2">
+                      {journal.title}
+                    </h3>
+                    <p className="text-xs text-gray-600 mb-2">
+                      {journal.university}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center gap-4 flex-wrap">
+              <div className="w-52 h-72 bg-gray-300 rounded-2xl flex items-center justify-center">
+                <p className="text-gray-500 text-sm">Belum ada jurnal</p>
+              </div>
+            </div>
+          )}
+          <Link href="/jurnal" className="mt-4 inline-block text-sm text-green-900 font-semibold hover:underline transition-colors">
+            Lihat lebih banyak...
+          </Link>
         </section>
       </main>
     </>
