@@ -1,7 +1,7 @@
 // components/LandingPage.tsx
 'use client'
 import { useEffect, useState } from "react";
-import HeroSection from "@/components/HeroSection";
+import HeroSection from "@/components/HeroSection2";
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCompanyProfile, CompanyProfile } from '@/lib/companyProfile';
