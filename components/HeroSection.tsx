@@ -7,7 +7,6 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-green-900/30 z-0" />
 
       {/* Konten utama */}
-      <br /><></>
       <div className="relative z-10 max-w-7xl w-full flex flex-col md:flex-row gap-8 justify-center items-stretch">
 
         {/* Box 1: Desiccated Coconut */}
@@ -19,9 +18,13 @@ export default function HeroSection() {
           </p>
           <div className="flex flex-col gap-2 mt-auto">
             <button className="bg-white text-green-700 border border-green-700 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-green-50 transition w-full">Detail</button>
-            <button className="bg-green-700 text-white px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-green-800 transition w-full">Beli</button>
+            <a
+              href="/produk?category=desiccated"
+              className="bg-green-700 text-white px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-green-800 transition w-full text-center"
+            >
+              Beli
+            </a>
           </div>
-
         </div>
 
         {/* Box 2: Mesin Manufaktur */}
@@ -33,11 +36,16 @@ export default function HeroSection() {
           </p>
           <div className="flex flex-col gap-2 mt-auto">
             <button className="bg-white text-green-700 border border-green-700 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-green-50 transition w-full">Detail</button>
-            <button className="bg-green-700 text-white px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-green-800 transition w-full">Beli</button>
+            <a
+              href="/produk?category=mesin"
+              className="bg-green-700 text-white px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-green-800 transition w-full text-center"
+            >
+              Beli
+            </a>
           </div>
         </div>
 
-        {/* Box 3: Masagi (Hijau Transparan) */}
+        {/* Box 3: Masagi Info */}
         <div className="bg-green-900/80 text-white p-6 rounded-2xl shadow-xl w-full md:w-[360px] flex flex-col justify-start text-left">
           <h2 className="text-4xl font-bold mb-4">Masagi</h2>
           <p className="text-sm leading-relaxed">
