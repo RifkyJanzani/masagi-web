@@ -13,50 +13,34 @@ const Navbar = () => {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   // Only for landing page section scroll
-  const handleScroll = () => {
-    const sections = ["beranda", "tentangkami"];
-    const scrollPosition = window.scrollY + 100;
-    for (const section of sections) {
-      const element = document.getElementById(section);
-      if (element) {
-        const { offsetTop, offsetHeight } = element;
-        if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-          setActiveSection(section);
-          break;
-        }
-      }
-    }
-  };
+  // const handleScroll = () => {
+  //   const sections = ["beranda", "tentangkami"];
+  //   const scrollPosition = window.scrollY + 100;
+  //   for (const section of sections) {
+  //     const element = document.getElementById(section);
+  //     if (element) {
+  //       const { offsetTop, offsetHeight } = element;
+  //       if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+  //         setActiveSection(section);
+  //         break;
+  //       }
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    if (pathname === "/") {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (pathname === "/") {
+  //     window.addEventListener("scroll", handleScroll);
+  //     return () => window.removeEventListener("scroll", handleScroll);
+  //   }
+  // }, [pathname]);
 
   // Navigation logic
+
   const handleNavClick = (item: string) => {
-    const sectionId = item.toLowerCase().replace(/\s/g, "");
     setMenuOpen(false);
     if (item === "Tentang Kami") {
-      if (pathname === "/") {
-        // Scroll to section
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const offset = 80;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - offset;
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          });
-        } else {
-          window.location.hash = sectionId;
-        }
-      } else {
-        router.push(`/#${sectionId}`);
-      }
+      router.push("/tentangkami");
     } else if (item === "Beranda") {
       router.push("/");
     } else if (item === "Produk") {
@@ -66,28 +50,20 @@ const Navbar = () => {
     } else if (item === "Jurnal") {
       router.push("/jurnal");
     } else if (item === "Kontak") {
-      router.push("/#kontak");
+      router.push("/kontak");
     }
   };
 
-  // Active logic
   const navItems = ["Beranda", "Tentang Kami", "Produk", "Jurnal"];
+
   const getIsActive = (item: string) => {
-    if (item === "Beranda") {
-      return pathname === "/";
-    }
-    if (item === "Produk") {
-      return pathname === "/produk";
-    }
-    if (item === "Artikel") {
-      return pathname === "/artikel";
-    }
-    if (item === "Jurnal") {
-      return pathname === "/jurnal";
-    }
-    if (item === "Tentang Kami") {
-      return activeSection === "tentangkami";
-    }
+    if (pathname === "/kontak") return false; // ← Disable semua active saat di halaman kontak
+
+    if (item === "Beranda") return pathname === "/";
+    if (item === "Tentang Kami") return pathname === "/tentangkami";
+    if (item === "Produk") return pathname === "/produk";
+    if (item === "Jurnal") return pathname === "/jurnal";
+
     return false;
   };
 
@@ -96,10 +72,12 @@ const Navbar = () => {
       <div className="bg-white rounded-b-2xl rounded-tl-2xl rounded-tr-2xl px-6 md:px-8 py-4 mt-4 flex items-center justify-between w-[98vw] max-w-5xl shadow-lg relative">
         {/* Logo */}
         <div className="text-xl font-bold text-green-900">Masagi</div>
+
         {/* Hamburger (mobile) */}
         <button className="md:hidden ml-2" onClick={toggleMenu} aria-label="Buka menu">
           {menuOpen ? <X className="w-7 h-7 text-green-900" /> : <Menu className="w-7 h-7 text-green-900" />}
         </button>
+
         {/* Menu Desktop */}
         <nav className="hidden md:flex gap-6 items-center">
           {navItems.map((item, i) => (
@@ -116,6 +94,7 @@ const Navbar = () => {
             </button>
           ))}
         </nav>
+
         {/* Kontak Desktop */}
         <button
           onClick={() => handleNavClick("Kontak")}
@@ -123,6 +102,7 @@ const Navbar = () => {
         >
           Kontak
         </button>
+
         {/* Menu Mobile Dropdown */}
         {menuOpen && (
           <div className="absolute top-full left-0 w-full bg-white rounded-b-2xl shadow-lg flex flex-col items-center py-4 gap-2 md:hidden animate-fadeIn z-50">
