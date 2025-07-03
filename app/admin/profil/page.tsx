@@ -170,7 +170,7 @@ export default function ProfilPage() {
                   required
                 />
                 <p className="text-sm text-gray-500 mt-1">
-                  Email yang ditampilkan di footer website.
+                  Email yang ditampilkan di footer dan kontak.
                 </p>
               </div>
 
@@ -189,7 +189,7 @@ export default function ProfilPage() {
                   required
                 />
                 <p className="text-sm text-gray-500 mt-1">
-                  Nomor telepon yang ditampilkan di footer website.
+                  Nomor telepon yang ditampilkan di footer dan kontak website.
                 </p>
               </div>
             </div>
