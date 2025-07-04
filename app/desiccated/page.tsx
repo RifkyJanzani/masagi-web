@@ -1,8 +1,35 @@
 import React from 'react';
 import Container from '@/components/Container';
 import Reveal from '@/components/Reveal';
+import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
 
-export default function DesiccatedPage() {
+async function getProducts(category?: string) {
+  let query = supabase.from('products').select('*');
+  
+  if (category && category !== 'all') {
+    query = query.eq('category', category);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Gagal ambil data:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export default async function DesiccatedPage({
+  searchParams,
+}: {
+   searchParams: Promise<{ category?: string }>;
+}) {
+  const params = await searchParams;
+  const products = await getProducts(params.category);
+  const activeCategory = params.category || 'all';
+
   return (
     <main className="relative flex flex-col items-center min-h-screen bg-[#c3e2c1] overflow-hidden">
       {/* Background Gambar Parallax */}
@@ -35,6 +62,40 @@ export default function DesiccatedPage() {
                 terbarukan. Kami berkomitmen mendukung produktivitas industri dan keberlanjutan lingkungan 
                 melalui inovasi teknologi.
               </p>
+
+              <h2 className="text-2xl md:text-4xl font-semibold text-green-900 mb-4">
+               Beli Sekarang
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-6xl">
+            {products.map((product, i) => (
+              <div
+                key={product.id || i}
+                className="bg-white border rounded-2xl shadow-md p-4 flex flex-col items-center justify-between"
+              >
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-48 object-cover rounded-xl mb-4"
+                />
+                <h3 className="font-semibold text-lg text-center text-gray-800">{product.name}</h3>
+                <p className="text-green-900 font-bold text-center mb-4">
+                  Rp. {product.price.toLocaleString('id-ID')}
+                </p>
+                <div className="flex gap-2">
+                  <Link href={`/produk/${product.slug}`}>
+                    <button className="bg-white border border-green-900 text-green-900 px-4 py-1 rounded-full text-sm hover:bg-green-50">
+                      Detail
+                    </button>
+                  </Link>
+                  <button className="bg-green-900 text-white px-4 py-1 rounded-full text-sm hover:bg-green-700">
+                    Beli
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+              
             </div>
           </Reveal>
         </Container>
