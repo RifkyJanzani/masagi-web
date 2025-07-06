@@ -1,6 +1,10 @@
+'use client'
+
 import Image from 'next/image';
 import Link from 'next/link';
 import Container from '@/components/Container';
+import { useEffect, useState } from 'react'
+import { getCompanyProfile, CompanyProfile } from '@/lib/companyProfile'
 import { supabase } from '@/lib/supabase';
 
 async function getProduct(slug: string) {
@@ -39,8 +43,25 @@ export default async function ProductDetailPage({
 }: {
   params: { slug: string };
 }) {
+  const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
+  const [loading, setLoading] = useState(true);
   const product = await getProduct(params.slug);
   const recommended = product ? await getRecommendedProducts(product.category, product.id) : [];
+
+   useEffect(() => {
+    fetchCompanyProfile();
+  }, []);
+
+  const fetchCompanyProfile = async () => {
+    try {
+      const profile = await getCompanyProfile();
+      setCompanyProfile(profile);
+    } catch (error) {
+      console.error('Error fetching company profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!product) {
     return <div className="text-center mt-32">Produk tidak ditemukan.</div>;
@@ -83,7 +104,7 @@ export default async function ProductDetailPage({
 
             <div className="mt-6">
               <a
-                href="https://wa.me/6281219377033"
+                href={`https://wa.me/${companyProfile?.phone?.replace(/[^0-9]/g, '') || '6281219377033'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-green-900 text-white px-6 py-2 rounded-full text-center hover:bg-green-700 block w-full text-sm font-semibold"

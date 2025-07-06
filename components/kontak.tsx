@@ -34,10 +34,10 @@ export default function Kontak() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-sm md:text-base text-left items-center">
           {/* WhatsApp */}
           <div className="font-extrabold text-gray-700">WhatsApps</div>
-          <div className="md:col-span-2 text-black">{companyProfile?.phone || '+62 123 4567 890'}</div>
+          <div className="md:col-span-2 text-black">{companyProfile?.phone || '+62 812-1937-7033'}</div>
           <div className="md:col-span-2">
             <a
-              href="https://wa.me/6281219377033"
+              href={`https://wa.me/${companyProfile?.phone?.replace(/[^0-9]/g, '') || '6281219377033'}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-700 hover:bg-green-800 text-white px-4 py-1.5 rounded-full text-sm font-semibold w-full md:w-auto inline-block text-center"
@@ -48,7 +48,7 @@ export default function Kontak() {
 
           {/* Email */}
           <div className="font-extrabold text-gray-700">Email</div>
-          <div className="md:col-span-2 text-black">{companyProfile?.email || 'Masagienergihijau@gmail.com'}</div>
+          <div className="md:col-span-2 text-black">{companyProfile?.email}</div>
           <div className="md:col-span-2">
             <a
               href={`mailto:${companyProfile?.email || 'Masagienergihijau@gmail.com'}`}
