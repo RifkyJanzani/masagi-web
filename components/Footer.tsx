@@ -28,9 +28,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-xl font-bold">Masagi</h3>
+            <h3 className="text-xl font-bold">PT MASAGI Energi Hijau</h3>
             <p className="text-sm text-gray-300">
-              Solusi inovatif untuk pertanian modern yang berkelanjutan dan ramah lingkungan.
+              Solusi energi terbarukan dan pengelolaan limbah yang ramah lingkungan.
+            </p>
+            <p className="text-sm text-gray-300">
+              Tahun Berdiri: Desember 2024
             </p>
           </div>
 
@@ -56,13 +59,13 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Kontak</h3>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                Email: {companyProfile?.email || 'info@masagi.com'}
+                <strong>Email:</strong> {companyProfile?.email || 'masagienergihijau@gmail.com'}
               </li>
               <li>
-                Phone: {companyProfile?.phone || '+62 123 4567 890'}
+                <strong>Phone:</strong> {companyProfile?.phone || '+62 812 1937 7033'}
               </li>
               <li>
-                Alamat: {companyProfile?.address || 'Jl. Contoh No. 123, Jakarta'}
+                <strong>Alamat:</strong> {companyProfile?.address || 'Jl. Raya Kelapa No. 123, Desa Kelapa Indah, Kecamatan Kelapa Sejahtera, Kabupaten Kelapa Makmur, Provinsi Kelapa Bahagia, 12345'}
               </li>
             </ul>
           </div>
@@ -101,7 +104,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-300">
-          <p>&copy; {new Date().getFullYear()} Masagi. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} PT MASAGI Energi Hijau. All rights reserved.</p>
         </div>
       </div>
     </footer>
